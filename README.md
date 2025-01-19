@@ -11,13 +11,13 @@ This project is a simulation of a Laravel 10 application using PHP 8.3, MySQL 8.
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/your-repo/laravel-10-simulation.git
-    cd laravel-10-simulation
+    git clone git@github.com:ardantus/laravel10-ecs.git
+    cd laravel10-ecs
     ```
 
 2. Build the Docker image:
     ```sh
-    docker build -t laravel-10-simulation .
+    docker build -t laravel10-ecs .
     ```
 
 3. Run the application locally using Docker Compose:
@@ -35,8 +35,12 @@ This project is a simulation of a Laravel 10 application using PHP 8.3, MySQL 8.
     docker-compose exec app php artisan migrate
     ```
 
-# Username
+## Username
+```sh
 php artisan tinker
+```
+
+```sh
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
@@ -45,8 +49,11 @@ User::create([
     'email' => 'admin@example.com', // Gunakan email ini untuk username
     'password' => Hash::make('password123') // Gunakan password ini untuk login
 ]);
-exit
+```
 
+```sh
+exit
+```
 
 ## Dockerfile
 
@@ -93,7 +100,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: laravel-10-simulation
+    image: laravel10-ecs
     container_name: laravel_app
     restart: unless-stopped
     working_dir: /var/www
