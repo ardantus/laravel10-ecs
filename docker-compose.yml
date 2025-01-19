@@ -1,0 +1,71 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html:delegated
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - php
+      - mysqldb
+      - phpmyadmin
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_fpm
+    volumes:
+      - ./:/var/www/html:delegated
+      - /var/www/html/vendor
+    environment:
+      - APP_ENV=local
+      - APP_KEY=ABCDEF123ERD456EABCDEF123ERD456E
+      - APP_DEBUG=true
+      - APP_URL=http://localhost
+      - DB_HOST=mysqldb
+      - DB_PORT=3306
+      - DB_DATABASE=laravel
+      - DB_USERNAME=user
+      - DB_PASSWORD=yourpassword
+      - AWS_ACCESS_KEY_ID=yourawskey
+      - AWS_SECRET_ACCESS_KEY=yourawssecretkey
+      - AWS_DEFAULT_REGION=ap-southeast-3
+      - AWS_BUCKET=yournamebucket
+      - AWS_URL=https://yournamebucket.s3.ap-southeast-3.amazonaws.com/
+      - AWS_ENDPOINT=
+      - AWS_USE_PATH_STYLE_ENDPOINT=false
+      - FILESYSTEM_DRIVER=s3
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql:8.0.40
+    container_name: mysql_server
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: user
+      MYSQL_PASSWORD: yourpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mysql_server
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysqldb
+
+volumes:
+  mysql_data:
+  vendor_data:
